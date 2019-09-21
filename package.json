@@ -1,0 +1,37 @@
+{
+  "name": "depstatus",
+  "version": "0.0.0",
+  "description": "Simple, synchronous way to get a status check on installed dependencies",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint . --ignore-pattern node_modules",
+    "test": "tape test/*-test.js | tap-spec"
+  },
+  "keywords": [
+    "npm",
+    "node modules",
+    "dependencies",
+    "semver"
+  ],
+  "author": "Ryan Block <hello@ryanblock.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanblock/depstatus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ryanblock/depstatus/issues"
+  },
+  "homepage": "https://github.com/ryanblock/depstatus#readme",
+  "dependencies": {
+    "semver": "^6.3.0"
+  },
+  "devDependencies": {
+    "cpr": "^3.0.1",
+    "eslint": "^6.4.0",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^3.0.0",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.11.0"
+  }
+}
