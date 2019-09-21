@@ -43,19 +43,17 @@ module.exports = function depStatus (dir, opts={}) {
   tree.forEach(dep => {
     let folder = dep
     let versionNeeded = deps[dep]
-    // Prefer lockfile dep if available
-    if (lockDeps && lockDeps[dep])
-    versionNeeded = lockDeps[dep]
+    // Prefer lockfile version if available
+    if (lockDeps && lockDeps[dep] && lockDeps[dep].version)
+      versionNeeded = lockDeps[dep].version
 
-    // Handle deps pinned to tag names, or malformed versions
+    // Handle deps pinned to tag names, or malformed versions, and no lockfile
     let isValid = semver.valid(semver.coerce(versionNeeded))
     if (!isValid && !lockDeps ||
         !isValid && lockDeps && !lockDeps[dep]) {
       result.warn.push(dep)
     }
     else {
-      // Fall back to version claimed by the lockfile
-      if (!isValid) versionNeeded = lockDeps[dep]
       // Handle namespaced packages
       if (dep.startsWith('@')) folder = dep.split('/').join(path.sep)
       let depPackageFile = join(dir, 'node_modules', folder, 'package.json')
