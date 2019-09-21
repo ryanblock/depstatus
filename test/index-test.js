@@ -127,7 +127,7 @@ test('No deps', t => {
     cpr(join(mock, 'empty'), tmp, {overwrite:true}, err => {
       if (err) t.fail(err)
       else {
-        let result = depStatus(tmp, {time:true})
+        let result = depStatus(tmp)
         t.ok(result, 'Got dependency status report')
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)

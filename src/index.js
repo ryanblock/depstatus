@@ -5,7 +5,7 @@ let path = require('path')
 let join = path.join
 let read = file => JSON.parse(fs.readFileSync(file).toString())
 
-module.exports = function depStatus (dir, opts) {
+module.exports = function depStatus (dir, opts={}) {
   if (!dir || typeof dir !== 'string')
     throw ReferenceError('File path required to check dependencies')
 
