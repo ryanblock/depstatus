@@ -3,7 +3,7 @@ let cpr = require('cpr')
 let fs = require('fs')
 let exists = fs.existsSync
 let join = require('path').join
-let mkdir = require('mkdirp')
+let mkdir = require('mkdirp').sync
 let rm = require('rimraf')
 let test = require('tape')
 
