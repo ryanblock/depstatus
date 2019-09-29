@@ -4,7 +4,7 @@
   "description": "Simple, synchronous way to get a status check on installed dependencies",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint . --ignore-pattern node_modules",
+    "lint": "eslint .",
     "test": "npm run lint && tape test/*-test.js | tap-spec"
   },
   "keywords": [

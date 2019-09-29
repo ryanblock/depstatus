@@ -62,7 +62,7 @@ test('Everything is ok', t => {
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.ok.length, depCount, 'All dependencies are ok')
-        console.log(result)
+        console.log(JSON.stringify(result,null,2))
       }
     })
   })
@@ -79,7 +79,7 @@ test('Deps are missing', t => {
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.missing.length, depCount, 'All dependencies are missing')
-        console.log(result)
+        console.log(JSON.stringify(result,null,2))
       }
     })
   })
@@ -97,7 +97,7 @@ test('Deps are outdated on the filesystem', t => {
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.outdated.length, depCount, 'All dependencies are outdated')
-        console.log(result)
+        console.log(JSON.stringify(result,null,2))
       }
     })
   })
@@ -115,7 +115,7 @@ test('Deps throw warnings', t => {
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.warn.length, depCount, 'All dependencies are warned')
-        console.log(result)
+        console.log(JSON.stringify(result,null,2))
       }
     })
   })
@@ -127,12 +127,12 @@ test('No deps', t => {
     cpr(join(mock, 'empty'), tmp, {overwrite:true}, err => {
       if (err) t.fail(err)
       else {
-        let result = depStatus(tmp)
+        let result = depStatus(tmp) // Test time disabled
         t.ok(result, 'Got dependency status report')
         let {depCount, resultCount} = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.warn.length, depCount, 'No dependencies returned')
-        console.log(result)
+        console.log(JSON.stringify(result,null,2))
       }
     })
   })

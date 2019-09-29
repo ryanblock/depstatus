@@ -3,6 +3,10 @@ let fs = require('fs')
 let exists = fs.existsSync
 let path = require('path')
 let join = path.join
+
+let prerelease = require('./_prerelease')
+let normal = require('./_normal')
+
 let read = file => JSON.parse(fs.readFileSync(file).toString())
 
 module.exports = function depStatus (dir, opts={}) {
@@ -42,39 +46,88 @@ module.exports = function depStatus (dir, opts={}) {
   let tree = Object.getOwnPropertyNames(deps)
   tree.forEach(dep => {
     let folder = dep
-    let versionNeeded = deps[dep]
+    let versionSpecified = deps[dep]
     // Prefer lockfile version if available
     if (lockDeps && lockDeps[dep] && lockDeps[dep].version)
-      versionNeeded = lockDeps[dep].version
+      versionSpecified = lockDeps[dep].version
 
     // Handle deps pinned to tag names, or malformed versions, and no lockfile
-    let isValid = semver.valid(semver.coerce(versionNeeded))
+    let isValid = semver.valid(semver.coerce(versionSpecified))
     if (!isValid && !lockDeps ||
         !isValid && lockDeps && !lockDeps[dep]) {
-      result.warn.push(dep)
+      result.warn.push({
+        [dep]: {
+          versionSpecified,
+          warning: 'Version specified is invalid and/or not found in package-lock.json'
+        }
+      })
     }
     else {
       // Handle namespaced packages
       if (dep.startsWith('@')) folder = dep.split('/').join(path.sep)
+      // This is it!
       let depPackageFile = join(dir, 'node_modules', folder, 'package.json')
-
       if (!exists(depPackageFile)) {
-        result.missing.push(dep)
+        result.missing.push({
+          [dep]: {
+            versionSpecified,
+            versionInstalled: null
+          }
+        })
       }
       else {
-        let versionInstalled = read(depPackageFile).version
+        let versionInstalled
         try {
-          let isOk = semver.satisfies(versionInstalled, versionNeeded)
-          let isAhead = semver.gt(versionInstalled, versionNeeded)
-          if (isOk)
-            result.ok.push(dep)
-          else if (isAhead)
-            result.warn.push(dep)
-          else
-            result.outdated.push(dep)
+          /**
+           * Regular versions vs prerelease versions
+           *   Logic paths split below, as prerelease versions are effectively a different dimension of semver. For example:
+           *   - `1.0.0-RC.1` should be treated differently than `1.0.1-RC.1` (or `1.0.0`)
+           *   Note: when using NPM to install a prerelease, it will specify a range (e.g. `^1.0.0-RC.1`)
+           */
+          versionInstalled = read(depPackageFile).version
+          let validRange = semver.validRange(versionSpecified)
+
+          // Get the minVersion because semver.prerelease doesn't accept prerelease ranges (e.g. `^1.0.0-RC.1`)
+          let minSpecified = semver.minVersion(versionSpecified)
+          let specifiedPrerelease = semver.prerelease(minSpecified)
+
+          let params = {
+            dep,
+            validRange,
+            versionSpecified,
+            specifiedPrerelease,
+            versionInstalled,
+            result
+          }
+
+          // Handle prereleases first
+          if (specifiedPrerelease) {
+            prerelease(params)
+          }
+          // Then the normal versions
+          else if (validRange) {
+            normal(params)
+          }
+          // ¯\_(ツ)_/¯
+          else {
+            result.warn.push({
+              [dep]: {
+                versionSpecified,
+                versionInstalled,
+                warning: 'Specified version is invalid'
+              }
+            })
+          }
         }
         catch (err) {
-          result.warn.push(dep)
+          versionInstalled = versionInstalled || null
+          result.warn.push({
+            [dep]: {
+              versionSpecified,
+              versionInstalled,
+              warning: `Error: ${err.message ? err.message : 'Unknown error'}`
+            }
+          })
         }
       }
     }

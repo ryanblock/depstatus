@@ -5,6 +5,8 @@
     "@namespaced/criticaldep": "^2.0.0-RC.1",
     "tildep": "~3.0.0",
     "x-dep": "4.x.0",
-    "latestDep": "latest"
+    "prerelease-dep": "^5.0.0-RC.1",
+    "latestDep": "latest",
+    "errorDep": "1.0.0"
   }
 }
