@@ -6,7 +6,8 @@ Unlike other dependency status checkers, depStatus:
 
 - Runs synchronously
 - Only has a single dependency: `semver`
-- Is aware of NPM tag pinning (e.g. `"a-package": "latest"`)
+- Has full support for prerelease versions (e.g. `"a-package": "^2.0.0-RC.1"`)
+- Also supports NPM tag pinning (e.g. `"a-package": "latest"`)
 - Respects and uses `package-lock.json` if present (but does not depend on it)
 
 
@@ -19,7 +20,7 @@ Unlike other dependency status checkers, depStatus:
 
 depStatus accepts two parameters:
 - `dir`: **String** file path containing a `package.json` file
-- `options`: **Object** options; named parameter `time` will console log the amount of time each dependency check ran for
+- `options`: **Object** options; named parameter `time` will console log the amount of time it took to run each dependency check
 
 **Example:**
 ```js
@@ -32,10 +33,39 @@ depStatus returns the following object:
 
 ```js
 {
-  ok: ['an-ok-dependency'],
-  missing: ['a-dep-not-yet-installed'],
-  outdated: ['an-outdated-dependency'],
-  warn: ['a-dependency-with-an-issue']
+  ok: [
+    {
+      'an-ok-dependency': {
+        versionSpecified: '1.0.0',
+        versionInstalled: '1.0.0'
+      }
+    }
+  ],
+  missing: [
+    {
+      'a-dep-not-yet-installed': {
+        versionSpecified: '1.0.0',
+        versionInstalled: null
+      }
+    }
+  ],
+  outdated: [
+    {
+      'an-outdated-dependency': {
+        versionSpecified: '1.0.0',
+        versionInstalled: '0.1.0'
+      }
+    }
+  ],
+  warn: [
+    {
+      'a-dependency-with-an-issue': {
+        versionSpecified: '~1.0.0',
+        versionInstalled: '1.1.0',
+        warning: 'Installed version is too far ahead of specified version'
+      }
+    }
+  ]
 }
 ```
 
