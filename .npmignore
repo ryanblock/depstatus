@@ -1,4 +1,5 @@
+.eslintignore
 .eslintrc.js
 .github
-test
 LICENSE
+test
