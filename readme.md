@@ -2,12 +2,15 @@
 
 ## A simple, synchronous way to get a status check on installed Node.js dependencies
 
+Perhaps you need to know whether your project's packages are correctly installed, or are out of date, or maybe even are ahead in time (from working in a branch, for example), or just have something funky going on. Try depStatus!
+
 Unlike other dependency status checkers, depStatus:
 
-- Runs synchronously
+- Runs synchronously and quite quickly
 - Only has a single dependency: `semver`
-- Has full support for prerelease versions (e.g. `"a-package": "^2.0.0-RC.1"`)
+- Has full support for prerelease package versions (e.g. `"a-package": "^2.0.0-RC.1"`)
 - Also supports NPM tag pinning (e.g. `"a-package": "latest"`)
+- Even supports packages installed via archive (`.tar`, `.tar.gz`, `.tgz`) and git (`npm i https://someurl.com/repo.git`
 - Respects and uses `package-lock.json` if present (but does not depend on it)
 
 
