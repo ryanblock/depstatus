@@ -8,6 +8,7 @@
     "prerelease-dep": "^5.0.0-RC.1",
     "latestDep": "latest",
     "errorDep": "1.0.0",
-    "tgz": "https://someurl.com/release.tgz"
+    "tgz": "https://someurl.com/release.tgz",
+    "git": "git+https://someurl.com/repo.git"
   }
 }

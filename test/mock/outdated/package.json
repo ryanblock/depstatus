@@ -9,6 +9,11 @@
     "tagged-dep": "RC"
   },
   "notes": [
-    "'.tar', '.tar.gz', '.tgz' aren't in here because there's no clear way to know if it's outdated"
+    "Archives ('.tar', '.tar.gz', '.tgz') aren't in here because the way package[-lock].json works, there's no clear way to know if it's outdated",
+    "// ----- //",
+    "Git installs: perhaps it is possible to tell if a versioned git repo is outdated, PRs welcome! See:",
+    "npm install git+ssh://git@github.com:npm/cli.git#v1.0.27",
+    "npm install git+ssh://git@github.com:npm/cli#semver:^5.",
+    "from: https://docs.npmjs.com/cli/install"
   ]
 }

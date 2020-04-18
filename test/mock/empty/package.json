@@ -6,6 +6,7 @@
     "tildep": "~3.0.0",
     "x-dep": "4.x.0",
     "tagged-dep": "RC",
-    "tgz": "https://someurl.com/release.tgz"
+    "tgz": "https://someurl.com/release.tgz",
+    "git": "git+https://someurl.com/repo.git"
   }
 }

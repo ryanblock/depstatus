@@ -15,7 +15,9 @@ module.exports = function depStatus (dir, opts={}) {
     throw ReferenceError('File path required to check dependencies')
 
   function checkSpecials (str) {
-    return [ '.tar', '.tar.gz', '.tgz' ].some(ext => str.endsWith(ext))
+    let tar = [ '.tar', '.tar.gz', '.tgz' ].some(ext => str.endsWith(ext))
+    let git = str.startsWith('git+')
+    return tar || git
   }
 
   let {time} = opts
