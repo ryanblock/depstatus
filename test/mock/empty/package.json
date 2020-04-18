@@ -5,6 +5,7 @@
     "@namespaced/criticaldep": "^2.0.0",
     "tildep": "~3.0.0",
     "x-dep": "4.x.0",
-    "tagged-dep": "RC"
+    "tagged-dep": "RC",
+    "tgz": "https://someurl.com/release.tgz"
   }
 }

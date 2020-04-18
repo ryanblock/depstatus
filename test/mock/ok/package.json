@@ -6,6 +6,7 @@
     "tildep": "~3.0.0",
     "x-dep": "4.x.0",
     "prerelease-dep": "^5.0.0-RC.1",
-    "tagged-dep": "RC"
+    "tagged-dep": "RC",
+    "tgz": "https://someurl.com/release.tgz"
   }
 }

@@ -6,12 +6,17 @@ let join = path.join
 
 let prerelease = require('./_prerelease')
 let normal = require('./_normal')
+let special = require('./_special')
 
 let read = file => JSON.parse(fs.readFileSync(file).toString())
 
 module.exports = function depStatus (dir, opts={}) {
   if (!dir || typeof dir !== 'string')
     throw ReferenceError('File path required to check dependencies')
+
+  function checkSpecials (str) {
+    return [ '.tar', '.tar.gz', '.tgz' ].some(ext => str.endsWith(ext))
+  }
 
   let {time} = opts
   if (time)
@@ -52,9 +57,13 @@ module.exports = function depStatus (dir, opts={}) {
       versionSpecified = lockDeps[dep].version
 
     // Handle deps pinned to tag names, or malformed versions, and no lockfile
-    let isValid = semver.valid(semver.coerce(versionSpecified))
-    if (!isValid && !lockDeps ||
-        !isValid && lockDeps && !lockDeps[dep]) {
+    let isSpecialCase = checkSpecials(versionSpecified)
+
+    let isValid = semver.valid(semver.coerce(versionSpecified)) || isSpecialCase
+
+    let notValidAndNoLock = !isValid && !lockDeps
+    let notValidAndMissingFromLock = !isValid && lockDeps && !lockDeps[dep]
+    if (notValidAndNoLock || notValidAndMissingFromLock) {
       result.warn.push({
         [dep]: {
           versionSpecified,
@@ -87,9 +96,12 @@ module.exports = function depStatus (dir, opts={}) {
           versionInstalled = read(depPackageFile).version
           let validRange = semver.validRange(versionSpecified)
 
-          // Get the minVersion because semver.prerelease doesn't accept prerelease ranges (e.g. `^1.0.0-RC.1`)
-          let minSpecified = semver.minVersion(versionSpecified)
-          let specifiedPrerelease = semver.prerelease(minSpecified)
+          let specifiedPrerelease
+          if (!isSpecialCase) {
+            // Get the minVersion because semver.prerelease doesn't accept prerelease ranges (e.g. `^1.0.0-RC.1`)
+            let minSpecified = semver.minVersion(versionSpecified)
+            specifiedPrerelease = semver.prerelease(minSpecified)
+          }
 
           let params = {
             dep,
@@ -107,6 +119,10 @@ module.exports = function depStatus (dir, opts={}) {
           // Then the normal versions
           else if (validRange) {
             normal(params)
+          }
+          // Then the special cases
+          else if (isSpecialCase) {
+            special(params)
           }
           // ¯\_(ツ)_/¯
           else {

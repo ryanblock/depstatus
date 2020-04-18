@@ -7,5 +7,8 @@
     "x-dep": "4.x.0",
     "prerelease-dep": "^5.0.0-RC.1",
     "tagged-dep": "RC"
-  }
+  },
+  "notes": [
+    "'.tar', '.tar.gz', '.tgz' aren't in here because there's no clear way to know if it's outdated"
+  ]
 }
