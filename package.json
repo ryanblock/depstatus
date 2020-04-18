@@ -24,14 +24,14 @@
   },
   "homepage": "https://github.com/ryanblock/depstatus#readme",
   "dependencies": {
-    "semver": "^6.3.0"
+    "semver": "^7.3.2"
   },
   "devDependencies": {
     "cpr": "^3.0.1",
-    "eslint": "^6.4.0",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^3.0.0",
+    "eslint": "^6.8.0",
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2",
     "tap-spec": "^5.0.0",
-    "tape": "^4.11.0"
+    "tape": "^4.13.2"
   }
 }
