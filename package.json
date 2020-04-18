@@ -1,6 +1,6 @@
 {
   "name": "depstatus",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple, synchronous way to get a status check on installed dependencies",
   "main": "src/index.js",
   "scripts": {
