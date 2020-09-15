@@ -1,5 +1,5 @@
 module.exports = function specialVersion (params) {
-  let {dep, versionSpecified, versionInstalled, result} = params
+  let { dep, versionSpecified, versionInstalled, result } = params
   let isOk = versionInstalled
   if (isOk) {
     result.ok.push({

@@ -1,7 +1,7 @@
 let semver = require('semver')
 
 module.exports = function normalVersion (params) {
-  let {dep, validRange, versionSpecified, versionInstalled, result} = params
+  let { dep, validRange, versionSpecified, versionInstalled, result } = params
   let isOk = semver.satisfies(versionInstalled, validRange)
   let isOutdated = semver.ltr(versionInstalled, validRange)
   if (isOk) {

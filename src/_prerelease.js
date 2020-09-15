@@ -1,7 +1,7 @@
 let semver = require('semver')
 
 module.exports = function prereleaseVersion (params) {
-  let {dep, validRange, versionSpecified, specifiedPrerelease, versionInstalled, result} = params
+  let { dep, validRange, versionSpecified, specifiedPrerelease, versionInstalled, result } = params
   let installedPrerelease = semver.prerelease(versionInstalled)
   // Out of bounds: establish whether we're working with the same version and prerelease ID
   let oob = semver.outside(versionInstalled, versionSpecified, '>') &&
@@ -28,7 +28,7 @@ module.exports = function prereleaseVersion (params) {
     })
   }
   // Dep is outdated
-  else if (semver.ltr(versionInstalled, validRange, {includePrerelease:true})) {
+  else if (semver.ltr(versionInstalled, validRange, { includePrerelease: true })) {
     result.outdated.push({
       [dep]: {
         versionSpecified,
