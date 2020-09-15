@@ -15,7 +15,7 @@ let getCounts = result => {
   let depCount = Object.getOwnPropertyNames(deps).length
   let resultCount = 0
   Object.getOwnPropertyNames(result).forEach(r => resultCount += result[r].length)
-  return {depCount, resultCount}
+  return { depCount, resultCount }
 }
 
 function reset (callback) {
@@ -53,16 +53,16 @@ test('Failing states', t => {
 test('Everything is ok', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'ok'), tmp, {overwrite:true}, err => {
+    cpr(join(mock, 'ok'), tmp, { overwrite: true }, err => {
       if (err) t.fail(err)
       else {
         fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
-        let result = depStatus(tmp, {time:true})
+        let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
-        let {depCount, resultCount} = getCounts(result)
+        let { depCount, resultCount } = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.ok.length, depCount, 'All dependencies are ok')
-        console.log(JSON.stringify(result,null,2))
+        console.log(JSON.stringify(result, null, 2))
       }
     })
   })
@@ -71,15 +71,15 @@ test('Everything is ok', t => {
 test('Deps are missing', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'missing'), tmp, {overwrite:true}, err => {
+    cpr(join(mock, 'missing'), tmp, { overwrite: true }, err => {
       if (err) t.fail(err)
       else {
-        let result = depStatus(tmp, {time:true})
+        let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
-        let {depCount, resultCount} = getCounts(result)
+        let { depCount, resultCount } = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.missing.length, depCount, 'All dependencies are missing')
-        console.log(JSON.stringify(result,null,2))
+        console.log(JSON.stringify(result, null, 2))
       }
     })
   })
@@ -88,16 +88,16 @@ test('Deps are missing', t => {
 test('Deps are outdated on the filesystem', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'outdated'), tmp, {overwrite:true}, err => {
+    cpr(join(mock, 'outdated'), tmp, { overwrite: true }, err => {
       if (err) t.fail(err)
       else {
         fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
-        let result = depStatus(tmp, {time:true})
+        let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
-        let {depCount, resultCount} = getCounts(result)
+        let { depCount, resultCount } = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.outdated.length, depCount, 'All dependencies are outdated')
-        console.log(JSON.stringify(result,null,2))
+        console.log(JSON.stringify(result, null, 2))
       }
     })
   })
@@ -106,16 +106,16 @@ test('Deps are outdated on the filesystem', t => {
 test('Deps throw warnings', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'warn'), tmp, {overwrite:true}, err => {
+    cpr(join(mock, 'warn'), tmp, { overwrite: true }, err => {
       if (err) t.fail(err)
       else {
         fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
-        let result = depStatus(tmp, {time:true})
+        let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
-        let {depCount, resultCount} = getCounts(result)
+        let { depCount, resultCount } = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.warn.length, depCount, 'All dependencies are warned')
-        console.log(JSON.stringify(result,null,2))
+        console.log(JSON.stringify(result, null, 2))
       }
     })
   })
@@ -124,15 +124,15 @@ test('Deps throw warnings', t => {
 test('No deps', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'empty'), tmp, {overwrite:true}, err => {
+    cpr(join(mock, 'empty'), tmp, { overwrite: true }, err => {
       if (err) t.fail(err)
       else {
         let result = depStatus(tmp) // Test time disabled
         t.ok(result, 'Got dependency status report')
-        let {depCount, resultCount} = getCounts(result)
+        let { depCount, resultCount } = getCounts(result)
         t.equal(depCount, resultCount, `Got back expected number of dependencies: ${depCount}`)
         t.equal(result.warn.length, depCount, 'No dependencies returned')
-        console.log(JSON.stringify(result,null,2))
+        console.log(JSON.stringify(result, null, 2))
       }
     })
   })

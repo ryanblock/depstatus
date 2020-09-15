@@ -10,7 +10,7 @@ let special = require('./_special')
 
 let read = file => JSON.parse(fs.readFileSync(file).toString())
 
-module.exports = function depStatus (dir, opts={}) {
+module.exports = function depStatus (dir, opts = {}) {
   if (!dir || typeof dir !== 'string')
     throw ReferenceError('File path required to check dependencies')
 
@@ -20,7 +20,7 @@ module.exports = function depStatus (dir, opts={}) {
     return tar || git
   }
 
-  let {time} = opts
+  let { time } = opts
   if (time)
     console.time(`Dependency status for ${dir}`)
 
