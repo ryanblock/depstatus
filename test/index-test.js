@@ -1,9 +1,7 @@
 let depStatus = require('../src')
 let cpr = require('cpr')
-let fs = require('fs')
-let exists = fs.existsSync
-let join = require('path').join
-let mkdir = require('mkdirp').sync
+let { existsSync: exists, mkdirSync: mkdir, readFileSync, renameSync } =  require('fs')
+let { join } = require('path')
 let rm = require('rimraf')
 let test = require('tape')
 
@@ -11,7 +9,7 @@ let mock = join(process.cwd(), 'test', 'mock')
 let tmp = join(process.cwd(), 'test', 'tmp')
 let getCounts = result => {
   let packageFile = join(tmp, 'package.json')
-  let deps = JSON.parse(fs.readFileSync(packageFile).toString()).dependencies || 0
+  let deps = JSON.parse(readFileSync(packageFile).toString()).dependencies || 0
   let depCount = Object.getOwnPropertyNames(deps).length
   let resultCount = 0
   Object.getOwnPropertyNames(result).forEach(r => resultCount += result[r].length)
@@ -27,10 +25,12 @@ function reset (callback) {
   })
 }
 
+let opts = { deleteFirst: true, confirm: true }
+
 test('Set up env', t => {
   t.plan(2)
   reset(() => {
-    mkdir(tmp)
+    mkdir(tmp, { recursive: true })
     t.ok(depStatus, 'Loaded depStatus')
     t.ok(exists(tmp), 'Created tmp dir')
   })
@@ -39,24 +39,24 @@ test('Set up env', t => {
 test('Failing states', t => {
   t.plan(5)
   try {depStatus()}
-  catch (err) {t.pass('depStatus failed on no param')}
+  catch (err) { t.pass('depStatus failed on no param') }
   try {depStatus('')}
-  catch (err) {t.pass('depStatus failed on empty string')}
+  catch (err) { t.pass('depStatus failed on empty string') }
   try {depStatus(1)}
-  catch (err) {t.pass('depStatus failed on number')}
+  catch (err) { t.pass('depStatus failed on number') }
   try {depStatus({})}
-  catch (err) {t.pass('depStatus failed on object literal')}
+  catch (err) { t.pass('depStatus failed on object literal') }
   try {depStatus('/foo/bar/baz/')}
-  catch (err) {t.pass('depStatus failed on path missing package.json')}
+  catch (err) { t.pass('depStatus failed on path missing package.json') }
 })
 
 test('Everything is ok', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'ok'), tmp, { overwrite: true }, err => {
+    cpr(join(mock, 'ok'), tmp, opts, err => {
       if (err) t.fail(err)
       else {
-        fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
+        renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
         let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
         let { depCount, resultCount } = getCounts(result)
@@ -71,7 +71,7 @@ test('Everything is ok', t => {
 test('Deps are missing', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'missing'), tmp, { overwrite: true }, err => {
+    cpr(join(mock, 'missing'), tmp, opts, err => {
       if (err) t.fail(err)
       else {
         let result = depStatus(tmp, { time: true })
@@ -88,10 +88,10 @@ test('Deps are missing', t => {
 test('Deps are outdated on the filesystem', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'outdated'), tmp, { overwrite: true }, err => {
+    cpr(join(mock, 'outdated'), tmp, opts, err => {
       if (err) t.fail(err)
       else {
-        fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
+        renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
         let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
         let { depCount, resultCount } = getCounts(result)
@@ -106,10 +106,10 @@ test('Deps are outdated on the filesystem', t => {
 test('Deps throw warnings', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'warn'), tmp, { overwrite: true }, err => {
+    cpr(join(mock, 'warn'), tmp, opts, err => {
       if (err) t.fail(err)
       else {
-        fs.renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
+        renameSync(join(tmp, 'nm'), join(tmp, 'node_modules'))
         let result = depStatus(tmp, { time: true })
         t.ok(result, 'Got dependency status report')
         let { depCount, resultCount } = getCounts(result)
@@ -124,7 +124,7 @@ test('Deps throw warnings', t => {
 test('No deps', t => {
   t.plan(3)
   reset(() => {
-    cpr(join(mock, 'empty'), tmp, { overwrite: true }, err => {
+    cpr(join(mock, 'empty'), tmp, opts, err => {
       if (err) t.fail(err)
       else {
         let result = depStatus(tmp) // Test time disabled

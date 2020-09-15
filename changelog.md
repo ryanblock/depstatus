@@ -2,6 +2,15 @@
 
 ---
 
+## [1.1.1] 2020-09-14
+
+### Changed
+
+- Removed testing for Node.js 8.x (EOL December, 2019); technically everything should still work in 8.x, so this is not a breaking change
+- Removed `mkdirp` dep in tests
+
+---
+
 ## [1.1.0] 2020-04-18
 
 ### Added
